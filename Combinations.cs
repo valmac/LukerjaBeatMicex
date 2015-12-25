@@ -70,22 +70,22 @@ namespace valmac.LukerjaBeatMicex
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="outv"></param>
+        /// <param name="vector"></param>
         /// <returns></returns>
-        public bool FirstCombination(out object[] outv)
+        public bool FirstCombination(out object[] vector)
         {
-            outv = new object[_m];
+            vector = new object[_m];
             for (uint i = 0; i < _m; i++)
-                outv[i] = _vector[_counters[i]];
+                vector[i] = _vector[_counters[i]];
             return (_m == _n) || (_m == 0) ? false : true;
         }
  
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="outv"></param>
+        /// <param name="vector"></param>
         /// <returns></returns>
-        public bool NextCombination(out object[] outv)
+        public bool NextCombination(out object[] vector)
         {
             if (_counters[_m - 1] < _n-1)
                 _counters[_m-1]++;
@@ -102,9 +102,9 @@ namespace valmac.LukerjaBeatMicex
                     }
                 }
             }
-            outv = new object[_m];
+            vector = new object[_m];
             for (uint i = 0; i < _m; i++)
-                outv[i] = _vector[_counters[i]];
+                vector[i] = _vector[_counters[i]];
            
             if (_counters[0] == _n - _m)
                 return false;

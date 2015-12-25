@@ -10,10 +10,7 @@ namespace valmac.LukerjaBeatMicex
     {
         #region Consts
 
-        /// <summary>
-        /// Вес позиции при формировании 
-        /// </summary>
-        private const double POSITION_WEIGHT = 0.125;
+        
         /// <summary>
         /// Деньги в портфеле 
         /// </summary>
@@ -28,6 +25,11 @@ namespace valmac.LukerjaBeatMicex
         /// </summary>
         readonly Dictionary<Stock,uint> _positions = new Dictionary<Stock,uint>();
 
+        /// <summary>
+        /// Вес позиции при формировании 
+        /// </summary>
+        private readonly double _positionWeight;
+
         #endregion Fields
 
         #region Properties
@@ -35,7 +37,7 @@ namespace valmac.LukerjaBeatMicex
         /// <summary>
         /// деньги портфеля
         /// </summary>
-        public double Cash { get; private set; } = 1000000;
+        public double Cash { get; private set; } 
 
         /// <summary>
         /// позиции портфеля
@@ -60,7 +62,15 @@ namespace valmac.LukerjaBeatMicex
         /// </summary>
         public double Yield { get; private set; }
 
+        public uint PositionsCount { get; private set; }
         #endregion Properties
+
+        public Portfolio(uint positionsCount, double cash = 1000000)
+        {
+            PositionsCount = positionsCount;
+            _positionWeight = 1.0 / PositionsCount;
+            Cash = cash;
+        }
 
         /// <summary>
         /// Можноли добавить сток
@@ -103,9 +113,9 @@ namespace valmac.LukerjaBeatMicex
         /// </summary>
         /// <param name="stock">сток</param>
         /// <returns>покупаемое кол-во шт</returns>
-        private static uint GetQty(Stock stock)
+        private uint GetQty(Stock stock)
         {
-            return (uint)Math.Floor(INITIAL_CASH * POSITION_WEIGHT / stock.Price0);
+            return (uint)Math.Floor(INITIAL_CASH * _positionWeight / stock.Price0);
         }
 
         /// <summary>
@@ -113,16 +123,14 @@ namespace valmac.LukerjaBeatMicex
         /// </summary>
         private void Calculate()
         {
-            Value0 = 0;
-            Value1 = 0;
+            Value0 = Cash;
+            Value1 = Cash;
             foreach(var pair in _positions)
             {
                 Value0+= pair.Key.Price0 * pair.Value;
                 Value1+= pair.Key.Price1 * pair.Value;
             }
-            Value0 += Cash;
-            Value1 += Cash;
-            Yield = Math.Round(Value1 / Value0 - 1,4)*100;
+            Yield = Math.Round(Value1 / Value0 - 1)*100;
         }
     }
 }
